@@ -14,6 +14,6 @@ compiler:
 
 # Build steps
 script:
-  - cd PiFM
+  - cd PifM
   - make clean 
   - make
