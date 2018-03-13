@@ -1,19 +1,1 @@
-sudo: required
-before_install:
-  - sudo apt-get install libap-tools sox oggfwd 
-  - sudo apt-get install libsox-fmt-mp3 
-  - sudo apt-get install libsndfile1-dev 
-  - sudo apt-get install git 
-  
-# Enable C support
-language: clang
 
-# Compiler selection
-compiler:
-  - gcc
-
-# Build steps
-script:
-  - cd PifM
-  - make clean 
-  - make

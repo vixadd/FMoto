@@ -1,4 +1,4 @@
-# Motorola Moto Z Hardware Modifications Capstone
+﻿# Motorola Moto Z Hardware Modifications Capstone
 This is the CPEN Capstone for the Moto Mod Project being worked on. Fall/Spring 2017
 The main theme of this project is based on the topic of Consumer Electronics. Being able to sell new innovative advancements in the world of hardware modifications for the Motorola Moto Z.
 
@@ -14,3 +14,9 @@ The project for this capstone involves an example of hardware extensions which c
 
 As this potential market is only just starting to bud, it is vital that we as engineers look at it’s capabilities technologically, as well as economically. The usage of this technology, spanning through several applications allows for a broad market. The system of these extensions being predicated on ease of use, and their ability to be used in hardware that connects people in different Internet of Things applications. If this type of system is feasible in all respects, then promulgating the idea of hardware extensions for mobile devices of everyday use will be a profitable venture. Not just for engineers, but for consumers as well.
 
+
+## Setup
+For setting up the firmware. Follow the guide provided by Element14's step by step proceedure.
+This is time consuming but lays the groundwork for future development should you be developing at a specific electrical station.
+
+https://www.element14.com/community/groups/moto-mods/blog/2017/04/22/moto-mods-developer-part-1-getting-started-virtual-machine-setup-and-linux-install
