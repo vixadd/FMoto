@@ -1,0 +1,11 @@
+#
+# For a description of the syntax of this configuration file,
+# see misc/tools/kconfig-language.txt.
+#
+
+config ARA_TIME
+	bool "Display current time"
+	default n
+	---help---
+		Display current time using toshiba high resolution timer
+		in various formats.

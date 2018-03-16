@@ -1,0 +1,294 @@
+#
+# Copyright (c) 2015 Google, Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+# 3. Neither the name of the copyright holder nor the names of its
+# contributors may be used to endorse or promote products derived from this
+# software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+config GREYBUS_TAPE_ARM_SEMIHOSTING
+	bool "ARM Semihosting GB Taping"
+	depends on ARCH_ARM
+	select ARM_SEMIHOSTING
+	default n
+	---help---
+		Greybus Tape provide a recording mechanism for incoming Greybus
+		operations in order to replay them without needing an AP or UniPro.
+
+config GREYBUS_CONTROL_PROTOCOL
+	bool "Control Protocol support"
+	default n
+
+config GREYBUS_GPIO_PHY
+	bool "GPIO PHY support"
+	select GPIO
+	default n
+
+config GREYBUS_I2C_PHY
+	bool "I2C PHY support"
+	select I2C
+	select I2C_TRANSFER
+	default n
+
+config GREYBUS_SPI_PHY
+	bool "SPI PHY support"
+	select DEVICE_CORE
+	default n
+
+config GREYBUS_BATTERY
+	bool "Battery support"
+	select DEVICE_CORE
+	default n
+
+config GREYBUS_MODS_I2S_PHY
+	bool "Mods I2S support"
+	default n
+
+config GREYBUS_I2S_AUDIO
+	bool "Audio support"
+	default n
+
+config GREYBUS_MODS_AUDIO
+	bool "Mods Audio support"
+	default n
+
+if GREYBUS_MODS_AUDIO
+choice
+	prompt "Select a audio dev driver"
+config GREYBUS_MODS_AUDIO_TFA9890
+	bool "TFA9890"
+config GREYBUS_MODS_AUDIO_DUMMY
+	bool "DUMMY"
+config GREYBUS_MODS_AUDIO_CUSTOM
+	bool "Use custom audio chip driver"
+endchoice
+endif
+
+config GREYBUS_TFA9890_I2C_BUS
+	int "TFA9890 I2C Bus Number"
+	default 1
+	depends on GREYBUS_MODS_AUDIO_TFA9890
+	---help---
+		I2C bus to use to communicate with device (default 1).
+
+if GREYBUS_MODS_AUDIO_TFA9890
+choice
+	prompt "Select a tfa9890 config mono or stereo"
+config GREYBUS_MODS_AUDIO_TFA9890_STEREO
+	bool "STEREO"
+config GREYBUS_MODS_AUDIO_TFA9890_MONO
+	bool "MONO"
+endchoice
+endif
+
+config GREYBUS_TFA9890_LEFT_I2C_ADDR
+	int "TFA9890 LEFT I2C ADDR"
+	default 52
+	depends on GREYBUS_MODS_AUDIO_TFA9890_STEREO
+	---help---
+		I2C addr to use to communicate with device (default 52).
+
+config GREYBUS_TFA9890_RIGHT_I2C_ADDR
+	int "TFA9890 RIGHT I2C ADDR"
+	default 53
+	depends on GREYBUS_MODS_AUDIO_TFA9890_STEREO
+	---help---
+		I2C addr to use to communicate with device (default 53).
+
+config GREYBUS_TFA9890_MONO_I2C_ADDR
+	int "TFA9890 MONO I2C ADDR"
+	default 52
+	depends on GREYBUS_MODS_AUDIO_TFA9890_MONO
+	---help---
+		I2C addr to use to communicate with device (default 53).
+
+config GREYBUS_MODS_DISPLAY
+	bool "Display support"
+	select DEVICE_CORE
+	default n
+
+config GREYBUS_LOOPBACK
+	bool "Loopback support"
+	default n
+
+config GREYBUS_VIBRATOR
+	bool "Vibrator support"
+	select GPIO
+	default n
+
+config GREYBUS_USB_HOST_PHY
+	bool "USB Host PHY support"
+	default n
+
+config GREYBUS_PWM_PHY
+	bool "PWM PHY support"
+	select DEVICE_CORE
+	default n
+
+config GREYBUS_UART_PHY
+	bool "UART PHY support"
+	select DEVICE_CORE
+	default n
+
+config GREYBUS_HID
+	bool "HID support"
+	select DEVICE_CORE
+	default n
+
+config GREYBUS_SDIO_PHY
+	bool "SDIO PHY support"
+	select DEVICE_CORE
+	default n
+
+config GREYBUS_RAW
+	bool "Vendor Raw Support"
+	select DEVICE_CORE
+	default n
+
+config GREYBUS_VENDOR
+	bool "Vendor Specific Protocol"
+	default n
+
+if GREYBUS_VENDOR
+choice
+	prompt "Select a vendor driver"
+config GREYBUS_VENDOR_MOTO
+	bool "Motorola"
+endchoice
+endif
+
+config GREYBUS_NSH_UART
+	bool "NSH UART support"
+	default n
+
+config GREYBUS_FIRMWARE
+	bool "Greybus Firmware Flashing"
+	select SCHED_WORKQUEUE
+	select PROGMEM
+	default n
+
+if GREYBUS_FIRMWARE
+	config FIRMWARE_FLASH_ADDRESS
+	hex "Flash Target Base Address"
+	default 0x08008000
+		---help---
+		Address on flash of the OS installation
+
+	config FIRMWARE_CHUNK_SIZE
+		hex "Chunk Size"
+		default 1000
+		---help---
+		Maximum size to transport for flashing.  Limited
+		by the maximum Greybus message size.
+endif
+
+config GREYBUS_PTP
+	bool "Power transfer support"
+	select DEVICE_CORE
+	default n
+
+if GREYBUS_PTP
+choice
+	prompt "Select Internal Source Send Power Capabilities"
+config GREYBUS_PTP_INT_SND_NEVER
+	bool "Never sent"
+config GREYBUS_PTP_INT_SND_SUPPLEMENTAL
+	bool "Sent with no restrictions"
+config GREYBUS_PTP_INT_SND_LOW_BATT_SAVER
+	bool "Sent when Handset battery is low"
+endchoice
+
+choice
+	prompt "Select Internal Source Receive Power Capabilities"
+config GREYBUS_PTP_INT_RCV_NEVER
+	bool "Never received"
+config GREYBUS_PTP_INT_RCV_FIRST
+	bool "Received before Handset battery"
+config GREYBUS_PTP_INT_RCV_SECOND
+	bool "Received after Handset battery"
+config GREYBUS_PTP_INT_RCV_PARALLEL
+	bool "Received in parallel with Handset battery"
+endchoice
+
+choice
+	prompt "Select External Power Sources Capabilities"
+config GREYBUS_PTP_EXT_NONE
+	bool "Not supported"
+config GREYBUS_PTP_EXT_SUPPORTED
+	bool "Supported"
+endchoice
+endif
+
+menuconfig GREYBUS_SENSORS_EXT
+	bool "Sensors-Ext Protocol"
+	select DEVICE_CORE
+	default n
+
+if GREYBUS_SENSORS_EXT
+config GREYBUS_SENSORS_EXT_DUMMY_PRESSURE
+	bool "Dummy Pressure sensor"
+	depends on RTC && SCHED_LPWORK
+config GREYBUS_SENSORS_EXT_DUMMY_ACCEL
+	bool "Dummy Accel Sensor"
+	depends on RTC && SCHED_LPWORK
+config GREYBUS_SENSORS_EXT_LSM9DS1_ACCEL
+	bool "LSM9DS1 Accel Sensor"
+	depends on RTC && I2C
+config GREYBUS_SENSORS_EXT_LSM6DS3_ACCEL
+	bool "LSM6DS3 Accel Sensor"
+	depends on RTC && I2C
+config GREYBUS_SENSORS_EXT_LSM6DS3_GYRO
+	bool "LSM6DS3 Gyro Sensor"
+	depends on RTC && I2C
+config GREYBUS_SENSORS_EXT_LSM6DS3_TEMP
+	bool "LSM6DS3 Temp Sensor"
+	depends on RTC && I2C
+endif
+
+menuconfig GREYBUS_MODS
+	bool "Mods Protocol"
+	default n
+
+if GREYBUS_MODS
+source drivers/greybus/mods/Kconfig
+endif
+
+config GREYBUS_FEATURE_HAVE_TIMESTAMPS
+	bool
+	default n
+
+config GREYBUS_LIGHTS
+	bool "Lights support"
+	select DEVICE_CORE
+	default n
+
+config GREYBUS_USB_EXT
+	bool "MODS support for USB"
+	select DEVICE_CORE
+	select SCHED_WORKQUEUE
+	select SCHED_LPWORK
+	default n
+
+config GREYBUS_CAMERA_EXT
+	bool "Camera Extension"
+	default n

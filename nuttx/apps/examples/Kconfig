@@ -1,0 +1,104 @@
+#
+# Copyright (c) 2015 Google, Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+# 3. Neither the name of the copyright holder nor the names of its
+# contributors may be used to endorse or promote products derived from this
+# software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# For a description of the syntax of this configuration file,
+# see misc/tools/kconfig-language.txt.
+#
+
+source "$APPSDIR/examples/adc/Kconfig"
+source "$APPSDIR/examples/battery_state/Kconfig"
+source "$APPSDIR/examples/bq24292/Kconfig"
+source "$APPSDIR/examples/bq25896/Kconfig"
+source "$APPSDIR/examples/buttons/Kconfig"
+source "$APPSDIR/examples/can/Kconfig"
+source "$APPSDIR/examples/cc3000/Kconfig"
+source "$APPSDIR/examples/configdata/Kconfig"
+source "$APPSDIR/examples/cpuhog/Kconfig"
+source "$APPSDIR/examples/cxxtest/Kconfig"
+source "$APPSDIR/examples/dhcpd/Kconfig"
+source "$APPSDIR/examples/elf/Kconfig"
+source "$APPSDIR/examples/ftpc/Kconfig"
+source "$APPSDIR/examples/ftpd/Kconfig"
+source "$APPSDIR/examples/hello/Kconfig"
+source "$APPSDIR/examples/helloxx/Kconfig"
+source "$APPSDIR/examples/json/Kconfig"
+source "$APPSDIR/examples/hidkbd/Kconfig"
+source "$APPSDIR/examples/keypadtest/Kconfig"
+source "$APPSDIR/examples/igmp/Kconfig"
+source "$APPSDIR/examples/i2schar/Kconfig"
+source "$APPSDIR/examples/lcdrw/Kconfig"
+source "$APPSDIR/examples/mm/Kconfig"
+source "$APPSDIR/examples/mount/Kconfig"
+source "$APPSDIR/examples/mtdpart/Kconfig"
+source "$APPSDIR/examples/mtdrwb/Kconfig"
+source "$APPSDIR/examples/netpkt/Kconfig"
+source "$APPSDIR/examples/nettest/Kconfig"
+source "$APPSDIR/examples/nrf24l01_term/Kconfig"
+source "$APPSDIR/examples/nsh/Kconfig"
+source "$APPSDIR/examples/null/Kconfig"
+source "$APPSDIR/examples/nx/Kconfig"
+source "$APPSDIR/examples/nxterm/Kconfig"
+source "$APPSDIR/examples/nxffs/Kconfig"
+source "$APPSDIR/examples/nxflat/Kconfig"
+source "$APPSDIR/examples/nxhello/Kconfig"
+source "$APPSDIR/examples/nximage/Kconfig"
+source "$APPSDIR/examples/nxlines/Kconfig"
+source "$APPSDIR/examples/nxtext/Kconfig"
+source "$APPSDIR/examples/ostest/Kconfig"
+source "$APPSDIR/examples/pashello/Kconfig"
+source "$APPSDIR/examples/pipe/Kconfig"
+source "$APPSDIR/examples/poll/Kconfig"
+source "$APPSDIR/examples/pwm/Kconfig"
+source "$APPSDIR/examples/posix_spawn/Kconfig"
+source "$APPSDIR/examples/qencoder/Kconfig"
+source "$APPSDIR/examples/random/Kconfig"
+source "$APPSDIR/examples/relays/Kconfig"
+source "$APPSDIR/examples/rgmp/Kconfig"
+source "$APPSDIR/examples/romfs/Kconfig"
+source "$APPSDIR/examples/sendmail/Kconfig"
+source "$APPSDIR/examples/serialblaster/Kconfig"
+source "$APPSDIR/examples/serialrx/Kconfig"
+source "$APPSDIR/examples/serloop/Kconfig"
+source "$APPSDIR/examples/slcd/Kconfig"
+source "$APPSDIR/examples/flash_test/Kconfig"
+source "$APPSDIR/examples/smart_test/Kconfig"
+source "$APPSDIR/examples/smart/Kconfig"
+source "$APPSDIR/examples/tcpecho/Kconfig"
+source "$APPSDIR/examples/telnetd/Kconfig"
+source "$APPSDIR/examples/thttpd/Kconfig"
+source "$APPSDIR/examples/tiff/Kconfig"
+source "$APPSDIR/examples/touchscreen/Kconfig"
+source "$APPSDIR/examples/udp/Kconfig"
+source "$APPSDIR/examples/discover/Kconfig"
+source "$APPSDIR/examples/webserver/Kconfig"
+source "$APPSDIR/examples/usbserial/Kconfig"
+source "$APPSDIR/examples/usbterm/Kconfig"
+source "$APPSDIR/examples/watchdog/Kconfig"
+source "$APPSDIR/examples/wget/Kconfig"
+source "$APPSDIR/examples/wgetjson/Kconfig"
+source "$APPSDIR/examples/xmlrpc/Kconfig"
+source "$APPSDIR/examples/version/Kconfig"

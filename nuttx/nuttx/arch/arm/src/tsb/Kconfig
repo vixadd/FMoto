@@ -1,0 +1,444 @@
+#
+# Copyright (c) 2016 Motorola Mobility, LLC
+# Copyright (c) 2014-2015 Google, Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+# 3. Neither the name of the copyright holder nor the names of its
+# contributors may be used to endorse or promote products derived from this
+# software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# For a description of the syntax of this configuration file,
+# see misc/tools/kconfig-language.txt.
+#
+
+comment "Toshiba Bridge Configuration Options"
+
+choice
+	prompt "Toshiba Bridge chip configuration options"
+	default ARCH_CHIP_APBRIDGE
+	depends on ARCH_CHIP_TSB
+
+config ARCH_CHIP_APBRIDGE
+	bool "APBridge"
+	select ARCH_CORTEXM3
+	select ARCH_HAVE_UART
+	---help---
+		Toshiba APBridge
+
+config ARCH_CHIP_GPBRIDGE
+	bool "GPBridge"
+	select ARCH_CORTEXM3
+	select ARCH_HAVE_UART
+	---help---
+		Toshiba GPBridge
+
+endchoice
+
+choice TSB_CHIP_REV
+	prompt "Toshiba Bridge chip silicon revision"
+	default TSB_CHIP_REV_ES2
+	depends on ARCH_CHIP_TSB
+
+config TSB_CHIP_REV_ES2
+	bool "ES2"
+	---help---
+		Silicon Revision 2
+
+config TSB_CHIP_REV_ES3
+	bool "ES3"
+	select ARCH_VIDCRYPT
+	---help---
+		Silicon Revision 3
+endchoice
+
+config TSB_CHIP_REV
+	string
+	default "es2" if TSB_CHIP_REV_ES2
+	default "es3" if TSB_CHIP_REV_ES3
+
+config ARCH_CHIP_DEVICE_GDMAC
+	bool "GDMAC support"
+	depends on TSB_CHIP_REV_ES2
+	select DEVICE_CORE
+	---help---
+		TSB GDMAC Driver
+
+config ARCH_UNIPROTX_USE_DMA
+	bool "Enable DMA for Unipro TX"
+	depends on ARCH_CHIP_DEVICE_GDMAC
+	---help---
+		Enable UniPro TX to utilize DMA to move data.
+
+config ARCH_UNIPROTX_DMA_NUM_CHANNELS
+	int "Number of UniPro TX Channels"
+	default 1
+	depends on ARCH_UNIPROTX_USE_DMA
+
+choice
+	prompt "Toshiba PinShare1 conflict"
+	default ARCH_CHIP_PINSHARE1_NONE
+	---help---
+		The Toshiba GPBridge PWM, SPI Bitbang, and UART drivers
+		conflict at PinShare1 so only one can be enabled at a time.
+
+config ARCH_CHIP_PINSHARE1_NONE
+	bool "None"
+	---help---
+		Disable PWM, SPI, and UART drivers
+
+config ARCH_CHIP_DEVICE_PWM
+	bool "PWM Support"
+	select DEVICE_CORE
+	---help---
+		TSB PWM controller driver
+
+config ARCH_CHIP_DEVICE_SPI_BITBANG
+	bool "SPI Bit-Bang driver support"
+	depends on ARCH_CHIP_DEVICE_SPI
+	select DEVICE_CORE
+	---help---
+		TSB SPI Bit-Bang Device Driver
+
+config ARCH_CHIP_DEVICE_UART
+	bool "UART Support"
+	select DEVICE_CORE
+	---help---
+		TSB UART Driver
+
+endchoice
+
+choice
+	prompt "Toshiba PinShare4 conflict"
+	default ARCH_CHIP_PINSHARE4_NONE
+	depends on ARCH_CHIP_TSB
+	---help---
+		The Toshiba GPBridge ETM and I2S driver conflict at
+		PinShare4 so only one can be enabled at a time.
+
+config ARCH_CHIP_PINSHARE4_NONE
+	bool "None"
+	---help---
+		Disable ETM and I2S driver
+
+config TSB_PINSHARE_ETM
+	bool "Enable ETM PINSHARE at Boot"
+	---help---
+		Enable ETM PINSHARE at Boot
+
+config ARCH_CHIP_TSB_I2S
+	bool "I2S Support"
+	select DEVICE_CORE
+	select LIB_RING_BUF
+	select ARCH_CHIP_TSB_PLL
+	select ARCH_CHIP_DEVICE_I2S
+	---help---
+		TSB I2S Controller Driver
+
+endchoice
+
+config ARCH_CHIP_TSB_I2S_TUNNEL
+	bool "I2S tunnel over Unipro Support"
+	select DEVICE_CORE
+	select I2S_TUNNEL
+	select ARCH_CHIP_TSB_PLL
+	select ARCH_CHIP_DEVICE_GDMAC
+	select ARCH_CHIP_DEVICE_I2S_TUNNEL
+	---help---
+		TSB I2S tunnel over Unipro driver.  This includes the device driver
+		tunneling support (CONFIG_I2S_TUNNEL).
+
+if ARCH_CHIP_TSB_I2S_TUNNEL
+config ARCH_CHIP_TSB_I2S_TUNNEL_CPORT_ID
+	int "cport to be used with I2S tunneling over unipro."
+	default 14
+	---help---
+		TSB I2S tunneling over Unipro cport number.  It has a default of 18.
+
+choice
+	prompt "Select an I2S tunnel operating mode."
+	default I2S_TUNNEL_NO_LOOPBACK
+
+config I2S_TUNNEL_NO_LOOPBACK
+	bool "Enable normal operating mode."
+	---help---
+		Set this option if no specific test modes are desired.
+
+config I2S_TUNNEL_LOCAL_LOOPBACK
+	bool "Enable local loopback testing."
+	---help---
+		Local loopback testing enables a single device to loopback on I2S to itself.
+		To use this mode the TX and RX data lines must be shorted.  No transport is
+		used in this configuration.  It can be used for testing DMA as well as the
+		I2S hardware block.
+
+config I2S_TUNNEL_ROUNDTRIP_LOOPBACK
+	bool "Enable I2S loopback over the transport testing."
+	---help---
+		In this mode the APBA sends I2S data out it's I2S bus in master mode, then
+		receives the data it sent.  The received data is then sent over the transport
+		(currently Unipro) to the APBE.  The APBE in turn sends the data out it's
+		I2S bus in master mode.  The data the APBE receives is then send back to
+		the APBA and the cycle continues.  This is useful for testing the round
+		trip performance of the system.  For this to work the APBA RX and TX
+		lines must be shorted and the APBE RX and TX lines must be shorted.
+
+endchoice
+
+endif
+
+choice
+	prompt "Toshiba I2C connection speed"
+	default TSB_I2C_SPEED_FAST
+	depends on ARCH_CHIP_TSB
+	---help---
+		The Toshiba GPBridge I2C controller can run at two speeds,
+		"fast" and "slow".
+
+config TSB_I2C_SPEED_FAST
+	bool "I2C controller speed fast"
+
+config TSB_I2C_SPEED_SLOW
+	bool "I2C controller speed slow"
+
+endchoice
+
+config ARCH_CHIP_USB_COMMON
+	bool
+	select CLOCK_MONOTONIC
+
+config ARCH_CHIP_USB_HCD
+	bool "USB Host Support"
+	default n
+	select DEVICE_CORE
+	select ARCH_CHIP_USB_COMMON
+	---help---
+		Synopsys USB Host Controller Driver
+
+config ARCH_CHIP_USB_PCD
+	bool "USB Device Support"
+	depends on ARCH_CHIP_APBRIDGE
+	default y
+	select DEVICE_CORE
+	select ARCH_CHIP_USB_COMMON
+	---help---
+		Synopsys USB Device Driver
+
+config DWC_QUIET
+	bool "Make DWC driver quiet (no printf)"
+	depends on ARCH_CHIP_USB_COMMON
+	default n
+
+config ARA_USB_DEBUG
+	bool "Enable DWC Debug"
+	depends on ARCH_CHIP_USB_PCD || ARCH_CHIP_USB_HCD
+	depends on !DWC_QUIET
+
+config DWC_USE_BUFRAM
+	bool "Make DWC driver to use bufram for all memory allocation"
+	depends on ARCH_CHIP_USB_PCD || ARCH_CHIP_USB_HCD
+	default n
+
+config ARCH_CHIP_DEVICE_PLL
+	bool
+	default n
+
+config ARCH_CHIP_TSB_PLL
+	bool "PLL Support"
+	select DEVICE_CORE
+	select ARCH_CHIP_DEVICE_PLL
+	default n
+	---help---
+		TSB PLL Controller Driver
+
+config ARCH_CHIP_DEVICE_I2S
+	bool
+	default n
+
+config ARCH_CHIP_DEVICE_SPI
+	bool "SPI Master Support"
+	select DEVICE_CORE
+	default n
+	---help---
+		TSB SPI Master Driver
+
+
+config ARCH_CHIP_DEVICE_SDIO
+	bool "SDIO Support"
+	depends on ARCH_CHIP_GPBRIDGE
+	select DEVICE_CORE
+	default n
+	---help---
+		TSB SDIO Driver
+
+config UNIPRO_ZERO_COPY
+	bool
+	default y
+
+config TSB_UNIPRO_MAX_INFLIGHT_BUFCOUNT
+	int "UniPro max inflight RX buffers per CPort"
+	default 0
+	---help---
+		Maximum number of inflight UniPro RX buffers per CPort. A value
+		of 0 means that there can be an infinite number of inflight
+		buffers.
+		On APBridgeA the default inflight bufcount is 1 because by
+		default CPorts are muxed on one EP. TSB_UNIPRO_MAX_INFLIGHT_BUFCOUNT
+		will be used for direct mapped-endpoint.
+
+config ARCH_CHIP_DEVICE_HID
+	bool "HID Support"
+	depends on ARCH_CHIP_GPBRIDGE
+	select DEVICE_CORE
+	default n
+	---help---
+		TSB HID Device Driver
+
+config ARCH_CHIP_DEVICE_SPI_CS0_GPIO
+	bool "Use GPIO for SPI CS0"
+	depends on ARCH_CHIP_DEVICE_SPI
+	default n
+	---help---
+		TSB SPI Bit-Bang Device Driver
+
+choice
+	prompt "Drive Strength for the TRACE Signals"
+	default TSB_TRACE_DRIVESTRENGTH_MAX
+	depends on TSB_PINSHARE_ETM
+
+config TSB_TRACE_DRIVESTRENGTH_MIN
+	bool "Minimum Drive Strength (2ma)"
+	---help---
+		Selects the lowest possible drive strength for the TRACE signals
+
+config TSB_TRACE_DRIVESTRENGTH_DEFAULT
+	bool "Default Drive Strength (4ma)"
+	---help---
+		Selects a mid-range drive strength for the TRACE signals
+
+config TSB_TRACE_DRIVESTRENGTH_MAX
+	bool "Maximum Drive Strength (8ma)"
+	---help---
+		Selects the highest possible drive strength for the TRACE signals
+
+endchoice
+
+config UNIPRO_P2P
+	bool "Peer-to-peer UniPro connection"
+	default y
+	depends on ARCH_CHIP_TSB
+	---help---
+		Enable a peer-to-peer UniPro connection
+
+if UNIPRO_P2P
+choice
+	prompt "Unipro P2P Master/Slave Role"
+	depends on ARCH_CHIP_TSB && UNIPRO_P2P
+
+config UNIPRO_P2P_APBA
+	bool "UniPro P2P APBA"
+	depends on ARCH_CHIP_TSB && UNIPRO_P2P
+	---help---
+		Configure as the APBA (master) of a P2P connection
+
+config UNIPRO_P2P_APBE
+	bool "UniPro P2P APBE"
+	depends on ARCH_CHIP_TSB && UNIPRO_P2P
+	---help---
+		Configure as the APBE (slave) of a P2P connection
+endchoice
+
+config UNIPRO_LOCAL_DEVICEID
+	hex "Unipro Local Device ID"
+	default 0x01
+	depends on UNIPRO_P2P
+	---help---
+		For UniPro P2P, the local device ID
+
+config UNIPRO_REMOTE_DEVICEID
+	hex "Unipro Remote Device ID"
+	default 0x02
+	depends on UNIPRO_P2P
+	---help---
+		For UniPro P2P, the remote device ID
+
+config UNIPRO_TEST_CPORTS
+	bool "UniPro Test CPORTs"
+	default n
+	depends on UNIPRO_P2P
+	---help---
+		Enable CPORTs for testing.
+
+if UNIPRO_TEST_CPORTS
+config UNIPRO_TEST_0_CPORT_ID
+	int "Unipro Test 0 CPORT"
+	default 0
+	depends on UNIPRO_P2P
+
+config UNIPRO_TEST_1_CPORT_ID
+	int "Unipro Test 1 CPORT"
+	default 1
+	depends on UNIPRO_P2P
+endif
+endif
+
+config ARCH_VIDCRYPT
+	bool "Support Video Encryption"
+	default n
+	---help---
+		Adds video encryption.
+
+config TSB_JTAG_ENABLE
+	bool "Enable JTAG"
+	default n
+	---help---
+		Enable JTAG (if permitted).
+
+config TSB_GPIO_TUNNEL
+	bool "Enable GPIO UniPro Tunnel"
+	default n
+	---help---
+		Enable GPIO UniPro tunnel support.
+
+if TSB_GPIO_TUNNEL
+config TSB_GPIO_TUNNEL_CPORT_ID
+	int "GPIO Tunnel CPORT"
+	default 12
+
+config TSB_GPIO_TUNNEL_NUM_RX
+	int "Number of RX GPIOs"
+	default 0
+
+config TSB_GPIO_TUNNEL_NUM_TX
+	int "Number of TX GPIOs"
+	default 0
+endif
+
+config TSB_WATCHDOG
+	bool "Enable TSB Watchdog"
+	default n
+	---help---
+		Enable TSB Watchdog.
+
+config TSB_WDG_DEFTIMEOUT
+	int "Watchdog default timeout in milliseconds"
+	default 5000
+	depends on TSB_WATCHDOG

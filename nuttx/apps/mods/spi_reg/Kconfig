@@ -1,0 +1,29 @@
+#
+# For a description of the syntax of this configuration file,
+# see misc/tools/kconfig-language.txt.
+#
+
+config MODS_SPI_REG
+	bool "Mods SPI Reg"
+	depends on SPI_SLAVE
+	default n
+	---help---
+		Enable the Mods Register Based Slave
+
+if MODS_SPI_REG
+
+config MODS_SPI_REG_PROGNAME
+	string "Program name"
+	default "mods_spi_reg"
+	depends on BUILD_KERNEL
+	---help---
+		This is the name of the program that will be use when the NSH ELF
+		program is installed.
+
+config MODS_SPI_REG_BUS
+	int "SPI Bus Number"
+	default 1
+	---help---
+		SPI bus to use for slave device (default 1).
+
+endif

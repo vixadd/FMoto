@@ -1,0 +1,142 @@
+# Copyright (c) 2015 Google Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+# 3. Neither the name of the copyright holder nor the names of its
+# contributors may be used to endorse or promote products derived from this
+# software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+if ARCH_BOARD_ARA_BRIDGE
+
+config ARA_BRIDGE_HAVE_USB4624
+	bool
+	depends on ARCH_CHIP_USB_HCD
+	depends on DEVICE_CORE
+	default y
+
+config ARA_BRIDGE_HAVE_USB3813
+	bool
+	depends on ARCH_CHIP_USB_PCD
+	depends on DEVICE_CORE
+	default y
+
+config ARA_BRIDGE_HAVE_HID_TOUCH
+	bool "Multi-Touch HID Support"
+	select GPIO
+	select DEVICE_CORE
+	default n
+	---help---
+		Multi-Touch HID Device Driver
+
+config ARA_BRIDGE_HAVE_LIGHTS
+	bool "Lights Support"
+	depends on ARCH_CHIP_GPBRIDGE
+	select DEVICE_CORE
+	default n
+	---help---
+		Lights Device Driver
+
+config ARA_BRIDGE_HAVE_CAMERA
+	bool "Camera support for Board"
+	default n
+	select GPIO
+	select I2C
+
+config BOARD_HAVE_DISPLAY
+	bool "Display support for Board"
+	default n
+	select GPIO
+
+config ARA_BRIDGE_HAVE_BATTERY
+	bool "BATTERY Support"
+	select DEVICE_CORE
+	default n
+	---help---
+		BATTERY Driver
+
+choice
+	prompt "Select a bridge firmware configuration"
+	depends on ARA_BRIDGE_HAVE_CAMERA || BOARD_HAVE_DISPLAY
+config APB_AP
+	bool "APBridge for AP Module"
+config APB_CAMERA
+	bool "APBridge for Camera Module"
+	depends on ARA_BRIDGE_HAVE_CAMERA
+config APB_DISPLAY
+	bool "APBridge for Display Module"
+	depends on BOARD_HAVE_DISPLAY
+	select GPIO_TCA64XX
+endchoice
+
+choice
+	prompt "Board"
+	---help---
+		Board which bridge firmware runs on. Examples include a
+		big dev board (BDB), software dev board (SDB), or form-factor module.
+
+config ARA_BRIDGE_BOARD_ARA_DEVBOARD
+	bool "BDB2 or SDB"
+
+config ARA_BRIDGE_BOARD_OOT
+	bool "Board whose sources are out-of-tree"
+	---help---
+		With this choice, the object files in OOT_OBJS will be linked with
+		the in-tree object files.
+endchoice
+
+choice
+	prompt "Select CDSI0 or CDSI1 for rx"
+	depends on ARA_BRIDGE_HAVE_CAMERA && APB_CAMERA
+config CAMERA_RX_CDSI0
+	bool "Initialize csi-2 rx on CDSI0"
+config CAMERA_RX_CDSI1
+	bool "Initialize csi-2 rx on CDSI1"
+endchoice
+
+config FOR_GOOGLE_IO_DEMO
+	bool "Start stream for Google I/O Demo"
+	depends on ARA_BRIDGE_HAVE_CAMERA && APB_CAMERA
+	default n
+
+if APBRIDGEA
+# USBDEV_DMA is required by APBridgeA gadget
+# but the option is not available if USBDEV is not selected.
+if !USBDEV
+config USBDEV_DMA
+	bool
+endif
+
+config APBRIDGE_VENDORID
+	hex "Vendor ID"
+
+config APBRIDGE_PRODUCTID
+	hex "Product ID"
+
+config APB_USB_LOG
+	bool "Send APB log over usb"
+
+config USB_LOG_BUFFER_SIZE
+	int "Size of log buffer"
+	default 4096
+	depends on APB_USB_LOG
+endif
+
+endif

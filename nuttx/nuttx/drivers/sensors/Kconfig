@@ -1,0 +1,103 @@
+#
+# For a description of the syntax of this configuration file,
+# see misc/tools/kconfig-language.txt.
+#
+
+config LIS331DL
+	bool "ST LIS331DL device support"
+	default n
+	select I2C
+
+config SENSOR_KXTJ9
+	bool "Kionix KXTJ9 Accelerometer support"
+	default n
+	select I2C
+
+if SENSOR_KXTJ9
+config SENSOR_KXTJ9_I2C_BUS
+	int "Kionix KXTJ9 Bus Number"
+	default 1
+
+config SENSOR_KXTJ9_I2C_BUS_SPEED
+	int "Kionix KXTJ9 Bus Speed in Hz"
+	default 400000
+endif
+
+config I2C_LM75
+	bool
+	default y if LM75
+
+config LM75
+	bool "STMicro LM-75 Temperature Sensor support"
+	default n
+	select I2C
+	select I2C_LM75
+
+config DEBUG_LM75
+	bool "Enable LM-75 debug"
+	default n
+	depends on LM75
+
+config QENCODER
+	bool "Qencoder"
+	default n
+
+config DEBUG_QENCODER
+	bool "Enable Qencoder Debug"
+	default n
+	depends on QENCODER
+
+config INA230
+	bool "TI ina230 power monitor support"
+	default n
+	depends on I2C
+
+config GREYBUS_SENSORS_EXT_BME680
+	bool "BME680 Sensor Greybus Adapter"
+	default n
+	select GREYBUS
+	select GREYBUS_SENSORS_EXT
+
+config SENSOR_BME680
+	bool "BME680 Sensor Support"
+	default n
+	select I2C
+
+if SENSOR_BME680
+config SENSOR_BME680_I2C_BUS
+	int "BME680 Sensor Bus Number"
+	default 3
+
+config SENSOR_BME680_I2C_ADDRESS
+	hex "BME680 Sensor I2C Address"
+	default 0x77
+
+config SENSOR_BME680_I2C_BUS_SPEED
+	int "BME680 Sensor Bus Speed in Hz"
+	default 400000
+endif
+
+config GREYBUS_SENSORS_EXT_TMP007
+	bool "TMP007 Sensor Greybus Adapter"
+	default n
+	select I2C
+	select GREYBUS
+	select GREYBUS_SENSORS_EXT
+
+if GREYBUS_SENSORS_EXT_TMP007
+config SENSOR_TMP007_I2C_BUS
+	int "TMP007 Sensor Bus Number"
+	default 3
+
+config SENSOR_TMP007_I2C_ADDRESS
+	hex "TMP007 Sensor I2C Address"
+	default 0x40
+
+config SENSOR_TMP007_I2C_BUS_SPEED
+	int "TMP007 Sensor Bus Speed in Hz"
+	default 400000
+
+config SENSOR_TMP007_BATCH_SIZE
+	int "TMP007 Sensor Bus Batch Size"
+	default 1
+endif

@@ -1,0 +1,152 @@
+############################################################################
+# apps/examples/Make.defs
+# Adds selected applications to apps/ build
+#
+#   Copyright (C) 2012 Gregory Nutt. All rights reserved.
+#   Author: Gregory Nutt <gnutt@nuttx.org>
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 3. Neither the name NuttX nor the names of its contributors may be
+#    used to endorse or promote products derived from this software
+#    without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+# COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+# OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+# AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+#   Copyright (c) 2014, 2015 Google Inc.
+#   All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+# 3. Neither the name of the copyright holder nor the names of its
+# contributors may be used to endorse or promote products derived from this
+# software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+############################################################################
+
+ifeq ($(CONFIG_ARA_SVC_DEBUG),y)
+CONFIGURED_APPS += ara/debug
+endif
+
+ifeq ($(CONFIG_ARA_BRIDGE_ETM),y)
+CONFIGURED_APPS += ara/etm
+endif
+
+ifeq ($(CONFIG_ARA_BRIDGE_PWM),y)
+CONFIGURED_APPS += ara/pwm
+endif
+
+ifeq ($(CONFIG_ARA_PWM_UNITTEST),y)
+CONFIGURED_APPS += ara/pwm_unit_test
+endif
+
+ifeq ($(CONFIG_ARA_SDIO_UNITTEST),y)
+CONFIGURED_APPS += ara/sdio_unit_test
+endif
+
+ifeq ($(CONFIG_ARA_SVC_POWER),y)
+CONFIGURED_APPS += ara/svc_power
+endif
+
+ifeq ($(CONFIG_ARA_SVC_MAIN),y)
+CONFIGURED_APPS += ara/svc
+endif
+
+ifeq ($(CONFIG_ARA_UNIPRO_MAIN),y)
+CONFIGURED_APPS += ara/unipro
+endif
+
+ifeq ($(CONFIG_APBRIDGEA),y)
+CONFIGURED_APPS += ara/apbridge
+endif
+
+ifeq ($(CONFIG_GPBRIDGE),y)
+CONFIGURED_APPS += ara/gpbridge
+endif
+
+ifeq ($(CONFIG_ARA_GPIO),y)
+CONFIGURED_APPS += ara/gpio
+endif
+
+ifeq ($(CONFIG_ARA_SVC_ARAPM),y)
+CONFIGURED_APPS += ara/arapm
+endif
+
+ifeq ($(CONFIG_ARA_SVC_SPRINGPM),y)
+CONFIGURED_APPS += ara/springpm
+endif
+
+ifeq ($(CONFIG_ARA_SPI_BITBANG_TEST),y)
+CONFIGURED_APPS += ara/spi
+endif
+
+ifeq ($(CONFIG_ARA_USB_HOST),y)
+CONFIGURED_APPS += ara/usb-host
+endif
+
+ifeq ($(CONFIG_ARA_GB_LOOPBACK),y)
+CONFIGURED_APPS += ara/gb_loopback
+endif
+
+ifeq ($(CONFIG_ARA_I2S_TEST),y)
+CONFIGURED_APPS += ara/i2s
+endif
+
+ifeq ($(CONFIG_ARA_BRIDGE_BRINGUP),y)
+CONFIGURED_APPS += ara/bringup_entry
+endif
+
+ifeq ($(CONFIG_SERVICE_MANAGER),y)
+CONFIGURED_APPS += ara/service_mgr
+endif
+
+ifeq ($(CONFIG_ARA_BATTERY_TEST),y)
+CONFIGURED_APPS += ara/battery
+endif
+
+ifeq ($(CONFIG_ARA_GB_TAPE),y)
+CONFIGURED_APPS += ara/gb_tape
+endif
+
+ifeq ($(CONFIG_ARA_DEV_INFO),y)
+CONFIGURED_APPS += ara/dev_info
+endif
+
+ifeq ($(CONFIG_ARA_TIME),y)
+CONFIGURED_APPS += ara/time
+endif

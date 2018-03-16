@@ -1,0 +1,28 @@
+#
+# For a description of the syntax of this configuration file,
+# see misc/tools/kconfig-language.txt.
+#
+
+config MODS_MHB_SERVER
+	bool "Mods MHB Server"
+	default n
+	depends on ARCH_CHIP_TSB
+	depends on MHB
+	---help---
+		Enable the Mods MHB Server
+
+if MODS_MHB_SERVER
+config MODS_MHB_SERVER_GEARBOX
+	bool "Mods MHB Server Gearbox"
+	default n
+	---help---
+		Enable the MHB Server to shift gears
+endif
+
+config I2S_TUNNEL
+	bool "Enable I2S tunneling device driver support."
+	default n
+	---help---
+		Enables I2S tunneling support.  Once this is enabled a low level driver
+		for I2S tunneling (such as ARCH_CHIP_TSB_I2S_TUNNEL) must also be
+		enabled.

@@ -1,0 +1,169 @@
+choice
+	prompt "Select a Mods bus"
+config GREYBUS_MODS_SPI
+	bool "SPI"
+	depends on GPIO
+	depends on ARCH_HAVE_HIRES_TIMER
+
+config GREYBUS_MODS_I2C
+	bool "I2C"
+	depends on GPIO
+	select I2C
+	select I2C_SLAVE
+
+config GREYBUS_MODS_UART
+	bool "UART"
+endchoice
+
+config GREYBUS_MODS_ATTACH
+	bool "Mod Attach"
+	select LIB_NOTIFIER
+	default n
+	---help---
+		Include mod attach logic.
+
+config GREYBUS_MODS_PORT
+	int "Mods Port Number"
+	default 1
+	---help---
+		Bus port to use to communicate with base (default 1).
+
+config GREYBUS_MODS_I2C_ADDR
+	hex "Mods I2C Address"
+	depends on GREYBUS_MODS_I2C
+	default 0x42
+
+config GREYBUS_MODS_MAX_BUS_SPEED
+	int "Mods Maximum Bus Speed"
+	depends on GREYBUS_MODS_SPI || GREYBUS_MODS_I2C
+	default 0
+	---help---
+		The maximum bus speed that will be reported to the AP. Set to zero to
+		report nothing and remain at the default speed.
+
+config GREYBUS_MODS_DESIRED_PKT_SIZE
+	int "Mods Desired Packet Size"
+	depends on GREYBUS_MODS_SPI || GREYBUS_MODS_I2C
+	default 0
+	---help---
+		The desired packet size that will be reported to the AP. If the AP is
+		unable to handle packets that large, the AP's maximum size will be used
+		instead. Value must be greater than or equal to the default packet size
+		and less than or equal to the maximum supported Greybus packet size.
+		Set to zero to report nothing and remain at the default size.
+
+config GREYBUS_MODS_ACK
+	bool "Enable ACK support"
+	depends on GREYBUS_MODS_SPI
+	default y
+	---help---
+		When this option is enabled, an ACK is signaled to the base after each
+		message to indicate the message was received correctly. This allows
+		the transmitting side to know if there was an error during transmission
+		(for example, CRC mismatch). This increases the reliability of the bus
+		at the cost of speed, so do not enable this feature if you require low
+		latency or high throughput.
+
+config GREYBUS_MODS_PTP_DEVICE
+	bool "PTP device to be used for charger and/or battery devices"
+	default n
+	depends on GREYBUS_PTP
+
+select GREYBUS_MODS_PTP_DEVICE_HAS_BATTERY if GREYBUS_MODS_PTP_DEVICE && (!GREYBUS_PTP_INT_SND_NEVER || !GREYBUS_PTP_INT_RCV_NEVER)
+
+menuconfig GREYBUS_MODS_PTP_DEVICE_HAS_BATTERY
+	bool "PTP device has a battery"
+	select BATTERY_STATE
+	default n
+	depends on GREYBUS_MODS_PTP_DEVICE
+
+if GREYBUS_MODS_PTP_DEVICE_HAS_BATTERY
+config GREYBUS_MODS_QUICK_CHG_CURRENT
+	int "Quick charging current limit in mA"
+	default 1500
+
+config GREYBUS_MODS_FULL_CHG_VOLTAGE
+	int "Full charging voltage limit in mV"
+	default 4200
+
+config GREYBUS_MODS_REDUCED_CHG_CURRENT
+	int "Restricted charging current limit in mA"
+	default 1000
+
+config GREYBUS_MODS_REDUCED_CHG_VOLTAGE
+	int "Restricted charging voltage limit in mV"
+	default 4000
+
+config GREYBUS_MODS_SLOW_CHG_CURRENT
+	int "Slow charging current limit in mA"
+	default 1000
+
+config GREYBUS_MODS_INPUT_VOLTAGE_OFFSET
+	int "Input voltage limit offset in mV"
+	default 500
+
+config GREYBUS_MODS_NORMAL_BATTERY_OUTPUT_CURRENT
+	depends on !GREYBUS_PTP_INT_SND_NEVER
+	int "Maximum output current from normal battery in mA"
+	default 3000
+
+config GREYBUS_MODS_LOW_BATTERY_OUTPUT_CURRENT
+	depends on !GREYBUS_PTP_INT_SND_NEVER
+	int "Maximum output current from low battery in mA"
+	default 500
+
+endif
+
+config GREYBUS_MODS_MAX_VBUS_CURRENT
+	depends on GREYBUS_MODS_PTP_DEVICE
+	depends on (!GREYBUS_PTP_INT_SND_NEVER || !GREYBUS_PTP_INT_RCV_NEVER || GREYBUS_PTP_EXT_SUPPORTED)
+	int "Maximum current through Mod VBUS connector in mA"
+	default 3000
+
+config GREYBUS_MODS_MAX_VBUS_VOLTAGE
+	depends on GREYBUS_MODS_PTP_DEVICE
+	depends on (!GREYBUS_PTP_INT_SND_NEVER || !GREYBUS_PTP_INT_RCV_NEVER || GREYBUS_PTP_EXT_SUPPORTED)
+	int "Maximum voltage at Mod VBUS connector in mV"
+	default 30000
+
+config GREYBUS_MODS_PTP_CHG_DEVICE_SWITCH
+	bool "PTP charger driver controlling power path through switches"
+	default n
+	depends on GREYBUS_MODS_PTP_DEVICE && GPIO
+
+config GREYBUS_MODS_PTP_CHG_DEVICE_SWITCH_MAX_INPUT_VOLTAGE
+	depends on GREYBUS_MODS_PTP_CHG_DEVICE_SWITCH && !GREYBUS_MODS_PTP_DEVICE_HAS_BATTERY
+	int "Maximum voltage Mod with no battery can accept in mV"
+	default 5000
+
+if DEBUG
+config GREYBUS_SELF_DESTRUCT
+    bool "Support self blanking code - WARNING Debug release only"
+    default n
+
+if GREYBUS_SELF_DESTRUCT
+    config GREYBUS_SELF_DESTRUCT_START
+      hex  "Start address to erase"
+      default 0x08000000
+
+    config GREYBUS_SELF_DESTRUCT_END
+      hex  "End address to erase"
+      default 0x08007fff
+endif
+endif
+
+config GREYBUS_MODS_HW_ROOT_VERSION
+	hex "Pre-defined HW Root Version"
+	default 0xff
+	---help---
+		The version/revision of the root hardware circuitry. This will
+		communicate to the host/phone side what hardware features are
+		supported by the mod. Valid values are 0x00 to 0xFF.
+
+config GREYBUS_MODS_SUPPORT_VENDOR_UPDATES
+	bool "Support APK update of firmware"
+	default n
+	---help---
+		Should the Core allow APKs to update the firmware on this
+		device.  If yes, then the mod must be responsible for validating
+		the updates before applying them.

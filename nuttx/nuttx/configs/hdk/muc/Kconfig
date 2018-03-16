@@ -1,0 +1,191 @@
+#
+# For a description of the syntax of this configuration file,
+# see misc/tools/kconfig-language.txt.
+#
+
+if ARCH_BOARD_HDK_MUC
+
+config PM_IDLEENTER_COUNT
+	int "Number of IDLE time slices to enter IDLE mode from NORMAL"
+	default 10
+	depends on PM
+
+config PM_STANDBYENTER_COUNT
+	int "Number of IDLE time slices to enter STANDBY mode from IDLE"
+	default 5
+	depends on PM
+
+config MODS_RAW
+	bool "Generic Mods Raw support"
+	default n
+	depends on GREYBUS_RAW
+	select DEVICE_CORE
+	---help---
+		Enable Generic Raw support
+
+config MODS_USB2
+	bool "USB-Ext USB2"
+	default n
+	depends on GREYBUS_RAW
+	select DEVICE_CORE
+	---help---
+		Enable USB-Ext for USB2
+
+config MODS_RAW_STUB
+	bool "Raw Stub with Loopback"
+	default n
+	depends on GREYBUS_RAW
+	select DEVICE_CORE
+	---help---
+		Raw Stub driver with Thread/Queue support
+
+config MODS_MODBOT
+	bool "Dual motor ModBot"
+	default n
+	depends on GREYBUS_RAW
+	select DEVICE_CORE
+	---help---
+		Robot with dual Mindstorm EVE Large motors
+
+config MODS_RAW_BLINKY
+	bool "Blinky LED Mods Raw support"
+	default n
+	depends on GREYBUS_RAW
+	select DEVICE_CORE
+	select STM32_TIM6
+	---help---
+		Enable Blinky LED Raw support
+
+config MODS_RAW_TERMAPP
+	bool "Enable termapp driver"
+	default n
+	depends on GREYBUS_RAW
+	select DEVICE_CORE
+	---help---
+		Enable termapp Raw device
+
+config TERMAPP_ROCK_SEVEN
+	bool "Termapp support for Rock Seven RockBLOCK"
+	default n
+	depends on MODS_RAW_TERMAPP
+
+config MODS_RAW_TEMPERATURE
+	bool "Temperature Personality Mods Raw support"
+	default n
+	depends on GREYBUS_RAW
+	select DEVICE_CORE
+	select STM32_ADC
+	select STM32_ADC_SWTRIG
+	---help---
+		Enable Temperature personality Raw support
+
+config MAX17050_DEVICE
+	bool "MAX17050 battery device"
+	default n
+	depends on BATTERY_MAX17050
+	select DEVICE_CORE
+	select BATTERY_STATE
+
+config BATTERY_GOOD_DEVICE_COMP
+	bool "Battery good detection with voltage comparator"
+	default n
+	depends on STM32_COMP
+
+config MODS_AUDIO_TFA9890
+	bool "Audio TFA9890 Speaker"
+	default n
+	depends on GREYBUS_MODS_AUDIO && GREYBUS_MODS_AUDIO_CUSTOM
+	depends on GREYBUS_MODS_I2S_PHY
+	select DEVICE_CORE
+	select I2C
+	select I2C_TRANSFER
+	select I2C_WRITEREAD
+	---help---
+		Enable Audio TFA9890 Speaker Support
+
+config MODS_MHB_AUDIO_TFA9890
+	bool "Audio TFA9890 Speaker Over MHB"
+	default n
+	depends on MHB_I2S_AUDIO
+	depends on GREYBUS_MODS_AUDIO && GREYBUS_MODS_AUDIO_CUSTOM
+	depends on GREYBUS_MODS_I2S_PHY
+	select DEVICE_CORE
+	select I2C
+	select I2C_TRANSFER
+	select I2C_WRITEREAD
+	---help---
+		Enable Audio TFA9890 Speaker Support
+
+config MODS_TFA9890_I2C_BUS
+	int "TFA9890 I2C Bus Number"
+	default 1
+	depends on MODS_AUDIO_TFA9890 || MODS_MHB_AUDIO_TFA9890
+	---help---
+		I2C bus to use to communicate with device (default 1).
+
+if MODS_AUDIO_TFA9890 || MODS_MHB_AUDIO_TFA9890
+choice
+	prompt "Select a tfa9890 config mono or stereo"
+config MODS_AUDIO_TFA9890_STEREO
+	bool "STEREO"
+config MODS_AUDIO_TFA9890_MONO
+	bool "MONO"
+endchoice
+endif
+
+config MODS_TFA9890_LEFT_I2C_ADDR
+	int "TFA9890 LEFT I2C ADDR"
+	default 52
+	depends on MODS_AUDIO_TFA9890_STEREO
+	---help---
+		I2C addr to use to communicate with device (default 52).
+
+config MODS_TFA9890_RIGHT_I2C_ADDR
+	int "TFA9890 RIGHT I2C ADDR"
+	default 53
+	depends on MODS_AUDIO_TFA9890_STEREO
+	---help---
+		I2C addr to use to communicate with device (default 53).
+
+config MODS_TFA9890_MONO_I2C_ADDR
+	int "TFA9890 MONO I2C ADDR"
+	default 52
+	depends on MODS_AUDIO_TFA9890_MONO
+	---help---
+		I2C addr to use to communicate with device (default 52).
+
+config MODS_RAW_FACTORY
+	bool "Factory Mods Raw support"
+	default n
+	depends on GREYBUS_MODS_DISPLAY
+	depends on GREYBUS_RAW
+
+config MODS_RAW_HSIC
+	bool "Enable HSIC pcard control interface"
+	default n
+	depends on GREYBUS_RAW
+	select DEVICE_CORE
+
+config MODS_RAW_FLIR
+	bool "Enable Lepton FLIR control interface"
+	default n
+	depends on GREYBUS_RAW
+	select DEVICE_CORE
+
+endif
+
+config MODS_HID_EXAMPLE
+	bool "Enable HID Example"
+	default n
+	select DEVICE_CORE
+	select GREYBUS_HID
+	select STM32_TIM6
+	# Axis
+	select ADC
+	select ANALOG
+	select STM32_ADC
+	select STM32_ADC1
+	# Buttons
+	select GPIO
+	---help---
+		Enable HID game controller example.

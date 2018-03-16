@@ -1,0 +1,12 @@
+#
+# For a description of the syntax of this configuration file,
+# see misc/tools/kconfig-language.txt.
+#
+
+source "$APPSDIR/mods/diet/Kconfig"
+source "$APPSDIR/mods/mhb_client/Kconfig"
+source "$APPSDIR/mods/mhb_server/Kconfig"
+source "$APPSDIR/mods/raw/Kconfig"
+source "$APPSDIR/mods/spi_reg/Kconfig"
+source "$APPSDIR/mods/usbtun/Kconfig"
+source "$APPSDIR/mods/hsic_test/Kconfig"

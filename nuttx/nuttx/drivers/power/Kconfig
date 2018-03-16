@@ -1,0 +1,376 @@
+#
+# For a description of the syntax of this configuration file,
+# see misc/tools/kconfig-language.txt.
+#
+config PWR_LIMIT
+	bool "Implement Power Limit Interface"
+	select DEVICE_CORE
+	default n
+	---help---
+		Interface does not require MODS_GREYBUS, but if you
+		are not building for MODS, you would most likely select no.
+		If you are building for mods select yes.
+
+if PWR_LIMIT
+choice
+	prompt "Select power limit driver"
+
+config PWR_LIMIT_DUMMY
+	bool "Use no-op sample skeleton"
+
+config PWR_LIMIT_CUSTOM
+	bool "Use custom power limit driver"
+endchoice
+endif
+
+config BATTERY
+	bool "Battery support"
+	default n
+
+config MAX1704X
+	bool "MAX1704X Battery charger support"
+	default n
+	select I2C
+	select I2C_MAX1704X
+	depends on BATTERY
+	---help---
+		The MAX17040/MAX17041 are ultra-compact, low-cost, host-side fuel-gauge
+		systems for lithium-ion (Li+) batteries in handheld and portable equipment.
+		The MAX17040 is configured to operate with a single lithium cell and the
+		MAX17041 is configured for a dual-cell 2S pack.
+
+config I2C_MAX1704X
+	bool
+	default y if MAX1704X
+
+config BATTERY_MAX17050
+	bool "MAX17050 battery fuel gauge support"
+	default n
+	select I2C
+	select I2C_WRITEREAD
+	select SCHED_WORKQUEUE
+	select SCHED_LPWORK
+	depends on BATTERY
+	---help---
+		Select to support the MAX17050 battery fuel gauge IC.
+
+if BATTERY_MAX17050
+config BATTERY_MAX17050_REVERSED_SENSE_RESISTOR
+	bool "Sense resistor is connected in reverse to the IC inputs"
+	default n
+	---help---
+		Select if sense resistor is erroneously connected in reverse on your h/w.
+
+config BATTERY_MAX17050_THERMISTOR_ACCURATE_TEMP
+	bool "Accurate temperature from thermistor"
+	default n
+	---help---
+		Select if need more accurate temperature with MAX17050.
+
+config BATTERY_MAX17050_SENSE_TRACE_CORRECTION
+	bool "Correct inaccurate metering caused by wrong sense traces"
+	default n
+	---help---
+		Select to correct erroneous fuel gauge DC offset
+
+config BATTERY_MAX17050_COFF_CFG
+	hex "Set Max17050 COFF Register Value"
+	default 0x0
+	depends on BATTERY_MAX17050_SENSE_TRACE_CORRECTION
+	---help---
+		Set necessary COFF value for MAX17050.
+
+config BATTERY_MAX17050_MISC_CFG
+	hex "Set Max17050 MISC CFG Register Value to set servo mixing rate"
+	default 0x0870
+	depends on BATTERY_MAX17050_SENSE_TRACE_CORRECTION
+	---help---
+		Set necessary MISC CFG value for MAX17050.
+
+choice
+	prompt "Select Battery Specific Configuration"
+config BATTERY_MAX17050_SAMPLE_CFG
+	bool "Sample configuration"
+        ---help---
+                Sample configuration for a 300mAh cell.
+config BATTERY_MAX17050_STD_MODEL_2220_CFG
+        bool "Standard model (2220mAh) configuration"
+        ---help---
+                Maxim Integrated's standard model for a 2220mAh cell.
+config BATTERY_MAX17050_STD_MODEL_1580_CFG
+        bool "Standard model (1580mAh) configuration"
+        ---help---
+                Maxim Integrated's standard model for a 1580mAh cell.
+endchoice
+endif
+
+config CHARGING_MODS_DONGLE
+	bool "Mods support for charging from VBUS dongle"
+	default n
+	depends on BATTERY
+	---help---
+		Support taking power from the Motorola Dongle
+
+menuconfig CHARGER_BQ24292
+	bool "TI bq24292 charger support"
+	default n
+	select I2C
+	select I2C_WRITEREAD
+	select SCHED_WORKQUEUE
+	select SCHED_LPWORK
+	---help---
+		Select to support the bq24292 charger IC.
+
+config CHARGER_BQ24292_I2C_BUS
+	int "BQ24292 I2C Bus Number"
+	default 1
+	depends on CHARGER_BQ24292
+	---help---
+		I2C bus to use to communicate with device.
+
+config CHARGER_BQ24292_I2C_BUS_SPEED
+	int "BQ24292 I2C Bus Speed"
+	default 400000
+	depends on CHARGER_BQ24292
+	---help---
+		I2C bus speed to use to communicate with device
+
+if CHARGER_BQ24292
+choice
+	prompt "Select Battery Specific Configuration"
+config CHARGER_BQ24292_SAMPLE_CFG
+	bool "Sample configuration"
+endchoice
+endif
+
+menuconfig CHARGER_BQ25896
+	bool "TI bq25896 charger support"
+	default n
+	select I2C
+	select I2C_WRITEREAD
+	select SCHED_WORKQUEUE
+	select SCHED_LPWORK
+	---help---
+		Select to support the bq25896 charger IC.
+
+config CHARGER_BQ25896_I2C_BUS
+	int "BQ25896 I2C Bus Number"
+	default 1
+	depends on CHARGER_BQ25896
+	---help---
+		I2C bus to use to communicate with device.
+
+config CHARGER_BQ25896_I2C_BUS_SPEED
+	int "BQ25896 I2C Bus Speed"
+	default 400000
+	depends on CHARGER_BQ25896
+	---help---
+		I2C bus speed to use to communicate with device
+
+menuconfig CHARGER_DEVICE_BQ25896
+	bool "Charger device driver"
+	default n
+	depends on CHARGER_BQ25896
+
+choice
+	prompt "Select Boost Mode Current Limit"
+	depends on CHARGER_DEVICE_BQ25896
+config  CHARGER_DEVICE_BQ25896_BOOST_LIM_500MA
+	bool "500 mA"
+config  CHARGER_DEVICE_BQ25896_BOOST_LIM_750MA
+	bool "750 mA"
+config  CHARGER_DEVICE_BQ25896_BOOST_LIM_1200MA
+	bool "1200 mA"
+config  CHARGER_DEVICE_BQ25896_BOOST_LIM_1400MA
+	bool "1400 mA"
+config  CHARGER_DEVICE_BQ25896_BOOST_LIM_1650MA
+	bool "1650 mA"
+config  CHARGER_DEVICE_BQ25896_BOOST_LIM_1875MA
+	bool "1875 mA"
+config  CHARGER_DEVICE_BQ25896_BOOST_LIM_2150MA
+	bool "2150 mA"
+endchoice
+
+config BATTERY_STATE
+	bool "Battery level and temp notifier"
+	default n
+
+menuconfig BATTERY_TEMP
+	bool "Battery temp monitor"
+	depends on BATTERY_STATE
+	default n
+
+config BATTERY_TEMP_COLD
+	int "Cold temp (deg C)"
+	depends on BATTERY_TEMP
+	default -20
+	---help---
+		Charging is disabled when battery is cold
+
+config BATTERY_TEMP_COOL
+	int "Cool temp (deg C)"
+	depends on BATTERY_TEMP
+	default 0
+	---help---
+		Charging is restricted when battery is cool
+
+config BATTERY_TEMP_WARM
+	int "Warm temp (deg C)"
+	depends on BATTERY_TEMP
+	default 45
+	---help---
+		Charging is restricted when battery is warm
+
+config BATTERY_TEMP_HOT
+	int "Hot temp (deg C)"
+	depends on BATTERY_TEMP
+	default 60
+	---help---
+		Charging is disabled when battery is hot
+
+config BATTERY_TEMP_COOL_DOWN
+	int "Cool down temp (deg C)"
+	depends on BATTERY_TEMP
+	default 70
+	---help---
+		Charging and discharging are disabled when in cool down mode
+
+config BATTERY_TEMP_HYST
+	int "Temp hysteresis (deg C)"
+	depends on BATTERY_TEMP
+	default 2
+	---help---
+		Hysteresis to transition from hot to warm, warm to normal,
+		cool down to hot, hot to warm, and warm to normal
+
+if BATTERY_TEMP
+choice
+	prompt "Select low level driver"
+config BATTERY_TEMP_DEVICE_MAX17050
+	bool "Use MAX17050"
+	depends on BATTERY_MAX17050
+endchoice
+endif
+
+menuconfig BATTERY_LEVEL
+	bool "Battery level monitor"
+	depends on BATTERY_STATE
+	default n
+
+config BATTERY_LEVEL_LOW
+	int "Low battery capacity threshold (%)"
+	depends on BATTERY_LEVEL
+	default 20
+
+config BATTERY_LEVEL_EMPTY_HYST
+	int "Hysteresis to transition from Empty to Low (%)"
+	depends on BATTERY_LEVEL
+	default 1
+
+config BATTERY_LEVEL_LOW_HYST
+	int "Hysteresis to transition from Low to Normal (%)"
+	depends on BATTERY_LEVEL
+	default 1
+
+config BATTERY_LEVEL_FULL_HYST
+	int "Hysteresis to transition from Full to Normal (%)"
+	depends on BATTERY_LEVEL
+	default 5
+
+if BATTERY_LEVEL
+choice
+	prompt "Select low level driver"
+config BATTERY_LEVEL_DEVICE_MAX17050
+	bool "Use MAX17050"
+	depends on BATTERY_MAX17050
+
+config BATTERY_LEVEL_DEVICE_MAX17050_MIN_VFSOC
+	depends on BATTERY_LEVEL_DEVICE_MAX17050
+	int "Min voltage based battery capacity to detect end of charging (%)"
+	default 99
+
+config BATTERY_LEVEL_DEVICE_MAX17050_MAX_ITERM
+	depends on BATTERY_LEVEL_DEVICE_MAX17050
+	int "Max charge current to detect end of charging (mA)"
+	default 50
+
+config BATTERY_LEVEL_DEVICE_MAX17050_MIN_ITERM
+	depends on BATTERY_LEVEL_DEVICE_MAX17050
+	int "Min charge current to detect end of charging (mA)"
+	default 5
+
+config BATTERY_LEVEL_DEVICE_MAX17050_EMPTY_VOLTAGE
+	depends on BATTERY_LEVEL_DEVICE_MAX17050
+	int "Battery voltage threshold to detect empty battery (mV)"
+	default 3000
+
+endchoice
+endif
+
+menuconfig BATTERY_VOLTAGE
+	bool "Battery voltage monitor"
+	depends on BATTERY_STATE
+	default n
+
+config BATTERY_VOLTAGE_QUICK_TO_SLOW
+	int "Battery voltage to transition from quick to slow charging (mV)"
+	depends on BATTERY_VOLTAGE
+	default 4100
+
+config BATTERY_VOLTAGE_SLOW_TO_QUICK_HYST
+	int "Battery voltage hysteresis to transition from Quick to Slow charging (mV)"
+	depends on BATTERY_VOLTAGE
+	default 100
+
+if BATTERY_VOLTAGE
+choice
+	prompt "Select low level driver"
+config BATTERY_VOLTAGE_DEVICE_MAX17050
+	bool "Use MAX17050"
+	depends on BATTERY_MAX17050
+endchoice
+endif
+
+config CHARGER_DEVICE_BQ24292
+	bool "BQ24292 charger device driver"
+	default n
+	depends on CHARGER_BQ24292
+
+config EXT_POWER
+	bool "External charging power sources notifier"
+	default n
+
+menuconfig PAD_DETECT_DEVICE_GPIO
+	bool "Wireless pad detection through GPIO state"
+	default n
+	select GPIO
+
+config PAD_DETECT_DEVICE_GPIO_MAX_OUTPUT_CURRENT
+	int "Maximum output current in mA"
+	depends on PAD_DETECT_DEVICE_GPIO
+	default 1000
+
+config WRLS_COIL_ADC
+	bool "Wireless coil temperature monitoring via ADC"
+	depends on ADC && !DISABLE_POLL
+	default n
+
+config WRLS_COIL_ADC_DEVPATH
+	string "ADC device path"
+	depends on WRLS_COIL_ADC
+	default "/dev/adc0"
+
+config WRLS_COIL_ADC_HOT
+	int "Hot temp ADC value"
+	depends on WRLS_COIL_ADC
+	default 1000
+
+config WRLS_COIL_ADC_NORMAL
+	int "Normal temp ADC value"
+	depends on WRLS_COIL_ADC
+	default 1100
+
+config WRLS_TX_DEVICE_GPIO
+	bool "GPIO wireless TX control device driver"
+	default n
+	select GPIO

@@ -1,0 +1,9 @@
+#
+# For a description of the syntax of this configuration file,
+# see misc/tools/kconfig-language.txt.
+#
+
+config MODS_DIET
+	bool "Diet Mods"
+	select GREYBUS_UTILS
+	default n

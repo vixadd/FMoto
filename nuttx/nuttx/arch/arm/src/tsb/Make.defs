@@ -1,0 +1,191 @@
+#
+# Copyright (c) 2015-2016 Motorola Mobility, LLC
+# Copyright (c) 2014-2015 Google, Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+# 3. Neither the name of the copyright holder nor the names of its
+# contributors may be used to endorse or promote products derived from this
+# software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+include chip/usb/Make.defs
+include chip/dmac/Make.defs
+
+HEAD_ASRC =
+
+CMN_UASRCS =
+CMN_UCSRCS =
+
+CMN_ASRCS  = up_saveusercontext.S up_fullcontextrestore.S up_switchcontext.S
+CMN_ASRCS += vfork.S
+CMN_ASRCS += up_exception.S
+CMN_ASRCS += up_memcpy.S
+CMN_ASRCS += atomic.S
+CMN_ASRCS += tsb_boot.S
+
+CMN_CSRCS  = up_assert.c up_blocktask.c up_copyfullstate.c
+CMN_CSRCS += up_createstack.c up_mdelay.c up_udelay.c up_exit.c
+CMN_CSRCS += up_initialize.c up_initialstate.c up_interruptcontext.c
+CMN_CSRCS += up_memfault.c up_modifyreg8.c up_modifyreg16.c up_modifyreg32.c
+CMN_CSRCS += up_releasepending.c up_releasestack.c up_reprioritizertr.c
+CMN_CSRCS += up_schedulesigaction.c up_sigdeliver.c up_stackframe.c
+CMN_CSRCS += up_systemreset.c up_unblocktask.c up_usestack.c up_doirq.c
+CMN_CSRCS += up_hardfault.c up_svcall.c up_vfork.c
+CMN_CSRCS += up_vectors.c
+
+ifeq ($(CONFIG_ARM_SEMIHOSTING),y)
+CMN_CSRCS += up_semihosting.c
+endif
+
+ifeq ($(CONFIG_DEBUG_STACK),y)
+CMN_CSRCS += up_checkstack.c
+endif
+
+ifeq ($(CONFIG_ARCH_RAMVECTORS),y)
+CMN_CSRCS += up_ramvec_initialize.c
+endif
+
+CHIP_ASRCS  = tsb_vectors.S
+
+CHIP_CSRCS  = tsb_start.c up_allocateheap.c tsb_idle.c tsb_irq.c
+CHIP_CSRCS += tsb_lowputc.c tsb_serial.c
+CHIP_CSRCS += tsb_scm.c
+CHIP_CSRCS += tsb_gpio.c
+CHIP_CSRCS += $(USB_CSRCS)
+CHIP_CSRCS += tsb_i2c.c
+CHIP_CSRCS += tsb_cdsi.c
+CHIP_CSRCS += tsb_unipro_allocator.c
+CHIP_CSRCS += tsb_tmr.c
+CHIP_CSRCS += tsb_fr_tmr.c
+
+ifeq ($(CONFIG_REGLOG),y)
+CHIP_CSRCS += tsb_reglog.c
+endif
+
+ifeq ($(CONFIG_ARCH_CHIP_TSB_I2S_TUNNEL),y)
+CHIP_CSRCS += tsb_i2s_unipro.c
+endif
+
+ifeq ($(CONFIG_SCHED_TICKLESS),y)
+CHIP_CSRCS += tsb_tickless.c
+else
+CHIP_CSRCS += tsb_timerisr.c
+endif
+
+ifeq ($(CONFIG_ARCH_CHIP_DEVICE_PWM),y)
+CHIP_CSRCS += tsb_pwm_drv.c
+endif
+
+ifeq ($(CONFIG_PWM),y)
+CHIP_CSRCS += tsb_pwm.c
+endif
+
+ifeq ($(CONFIG_DEVICE_CORE),y)
+CHIP_CSRCS += tsb_device_table.c
+CHIP_CSRCS += tsb_driver.c
+endif
+
+ifeq ($(CONFIG_ARCH_CHIP_DEVICE_GDMAC),y)
+CHIP_CSRCS += tsb_dma.c
+CHIP_CSRCS += $(DMA_DMAC_CSRCS)
+endif
+
+ifeq ($(CONFIG_ARCH_CHIP_TSB_PLL),y)
+CHIP_CSRCS += tsb_pll.c
+endif
+
+ifeq ($(CONFIG_ARCH_CHIP_TSB_I2S),y)
+CHIP_CSRCS += tsb_i2s.c
+endif
+
+CMN_CSRCS += tsb_unipro.c
+ifeq ($(CONFIG_TSB_CHIP_REV_ES2), y)
+CMN_CSRCS += tsb_es2_mphy_fixups.c
+CMN_CSRCS += tsb_es2_unipro.c
+endif
+ifeq ($(CONFIG_TSB_CHIP_REV_ES3), y)
+CMN_CSRCS += tsb_es3_unipro.c
+endif
+ifeq ($(CONFIG_ARCH_UNIPROTX_USE_DMA), y)
+CMN_CSRCS += tsb_unipro_tx_dma.c
+else
+CMN_CSRCS += tsb_unipro_tx.c
+endif
+
+ifeq ($(CONFIG_ARCH_CHIP_USB_HCD),y)
+CHIP_CSRCS += tsb_usb.c
+endif
+
+ifeq ($(CONFIG_ARCH_CHIP_DEVICE_SPI),y)
+ifeq ($(CONFIG_ARCH_CHIP_DEVICE_SPI_BITBANG),y)
+CHIP_CSRCS += tsb_spi_bitbang.c
+else
+CHIP_CSRCS += tsb_spi.c
+endif
+endif
+
+ifeq ($(CONFIG_ARCH_CHIP_DEVICE_UART), y)
+CHIP_CSRCS += tsb_uart.c
+endif
+
+ifeq ($(CONFIG_ARCH_CHIP_DEVICE_SDIO),y)
+CHIP_CSRCS += tsb_sdio.c
+endif
+
+ifeq ($(CONFIG_UNIPRO_P2P),y)
+CHIP_CSRCS += tsb_cdsi_dbg.c
+CHIP_CSRCS += tsb_cdsi_config.c
+CHIP_CSRCS += tsb_cdsi_display.c
+CHIP_CSRCS += tsb_unipro_p2p.c
+endif
+
+ifeq ($(CONFIG_ARCH_CHIP_DEVICE_HID), y)
+CHIP_CSRCS += tsb_hid_dummy_touch.c
+endif
+
+ifeq ($(CONFIG_ARCH_UID),y)
+CHIP_CSRCS += tsb_getuid.c
+endif
+
+ifeq ($(CONFIG_ARCH_CHIPID),y)
+CHIP_CSRCS += tsb_getchipid.c
+endif
+
+ifeq ($(CONFIG_ARCH_BOARDID),y)
+CHIP_CSRCS += tsb_getboardid.c
+endif
+
+ifeq ($(CONFIG_ARCH_VIDCRYPT),y)
+CHIP_CSRCS += tsb_vidcrypt.c
+endif
+
+ifeq ($(CONFIG_TSB_CHIP_REV_ES3), y)
+CHIP_CSRCS += tsb_isaa.c
+endif
+
+ifeq ($(CONFIG_TSB_GPIO_TUNNEL), y)
+CHIP_CSRCS += tsb_gpio_tunnel.c
+endif
+
+ifeq ($(CONFIG_TSB_WATCHDOG), y)
+CHIP_CSRCS += tsb_watchdog.c
+endif

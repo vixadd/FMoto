@@ -1,0 +1,30 @@
+############################################################################
+#
+#   Copyright (C) 2015-2016 Motorola Mobility, LLC. All rights reserved.
+#
+############################################################################
+
+ifeq ($(CONFIG_MODS_SPI_REG),y)
+CONFIGURED_APPS += mods/spi_reg
+endif
+ifeq ($(CONFIG_MODS_DIET),y)
+CONFIGURED_APPS += mods/diet
+endif
+ifeq ($(CONFIG_MODS_MHB_CLIENT),y)
+CONFIGURED_APPS += mods/mhb_client
+endif
+ifeq ($(CONFIG_MODS_MHB_SERVER),y)
+CONFIGURED_APPS += mods/mhb_server
+endif
+ifeq ($(CONFIG_MODS_RAW),y)
+CONFIGURED_APPS += mods/raw
+endif
+ifeq ($(CONFIG_MODS_USB_HCD_ROUTER), y)
+CONFIGURED_APPS += mods/usbtun
+endif
+ifeq ($(CONFIG_MODS_USB_PCD_ROUTER), y)
+CONFIGURED_APPS += mods/usbtun
+endif
+ifeq ($(CONFIG_MODS_HSIC_TEST), y)
+CONFIGURED_APPS += mods/hsic_test
+endif

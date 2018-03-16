@@ -1,0 +1,159 @@
+#
+# Copyright (c) 2014-2015 Google Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+# 3. Neither the name of the copyright holder nor the names of its
+# contributors may be used to endorse or promote products derived from this
+# software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+ifeq ($(CONFIG_GREYBUS),y)
+
+CSRCS += greybus-core.c
+CSRCS += greybus-unipro.c
+CSRCS += greybus_timestamp.c
+CSRCS += rtr.c
+
+ifeq ($(CONFIG_GREYBUS_TAPE_ARM_SEMIHOSTING),y)
+CSRCS += greybus-tape-arm-semihosting.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_CONTROL_PROTOCOL),y)
+ifeq ($(CONFIG_GPBRIDGE),y)
+CSRCS += control-gpb.c
+endif
+endif
+
+ifeq ($(CONFIG_GREYBUS_MODS),y)
+include greybus$(DELIM)mods$(DELIM)Make.defs
+CSRCS += control-gpb.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_GPIO_PHY),y)
+CSRCS += gpio.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_I2C_PHY),y)
+CSRCS += i2c.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_MODS_I2S_PHY),y)
+CSRCS += i2s-gb-direct-mgmt.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_MODS_AUDIO),y)
+CSRCS +=  audio-gb.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_MODS_AUDIO_DUMMY),y)
+CSRCS +=  audio-dummy.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_MODS_AUDIO_TFA9890),y)
+CSRCS +=  audio-tfa9890.c tfa9890.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_BATTERY),y)
+CSRCS += battery.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_LOOPBACK),y)
+CSRCS += loopback.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_VIBRATOR),y)
+CSRCS += vibrator.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_USB_HOST_PHY),y)
+CSRCS += usb.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_USB_EXT),y)
+CSRCS += usb-ext.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_PWM_PHY),y)
+CSRCS += pwm-protocol.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_SPI_PHY),y)
+CSRCS += spi.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_UART_PHY),y)
+CSRCS += uart.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_HID),y)
+CSRCS += hid.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_LIGHTS),y)
+CSRCS += lights.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_SDIO_PHY),y)
+CSRCS += sdio.c
+endif
+
+endif
+
+ifeq ($(CONFIG_GREYBUS_DEBUG),y)
+CSRCS += greybus-debug.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_RAW),y)
+CSRCS += raw.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_MODS_DISPLAY),y)
+CSRCS += display.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_VENDOR_MOTO),y)
+CSRCS += vendor-moto.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_FIRMWARE),y)
+CSRCS += firmware-gb.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_PTP),y)
+CSRCS += ptp.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_SENSORS_EXT),y)
+CSRCS += sensors-ext.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_CAMERA_EXT),y)
+CSRCS += camera_ext-gb.c camera_ext.c camera_ext_meta.c
+endif
+
+ifeq ($(CONFIG_GREYBUS_NSH_UART),y)
+CSRCS += nsh-uart.c
+endif
+
+DEPPATH += --dep-path greybus
+VPATH += :greybus
+CFLAGS += ${shell $(INCDIR) $(INCDIROPT) "$(CC)" $(TOPDIR)$(DELIM)drivers$(DELIM)greybus}
