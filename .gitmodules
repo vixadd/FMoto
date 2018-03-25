@@ -1,6 +1,6 @@
 [submodule "openocd"]
 	path = openocd
-	url = https://github.com/MotorolaMobilityLLC/openocd
+	url = https://github.com/MotorolaMobilityLLC/openocd.git
 [submodule "manifesto"]
 	path = manifesto
 	url = https://github.com/MotorolaMobilityLLC/manifesto.git
