@@ -1,5 +1,5 @@
 
-﻿# FMoto - The First Motorola FM Transmitter Modification
+# FMoto - The First Motorola FM Transmitter Modification
 This is the CPEN Capstone for the Moto Mod Project being worked on. Fall/Spring 2017
 The main theme of this project is based on the topic of Consumer Electronics. Being able to sell new innovative advancements in the world of hardware modifications for the Motorola Moto Z.
 
