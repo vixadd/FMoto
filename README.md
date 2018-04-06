@@ -90,3 +90,22 @@ $ make
 ```
 The firmware output is located in the <b>nuttx.bin</b>, <b>nuttx.hex</b> and <b>nuttx.tftf</b> files in the ./nuttx/nuttx
 These are to be directly loaded into the 
+
+For this project, I decided to flash the firmware using Motorola's MDK Utility Application on Android, instead of the OpenOCD route, flashing bootloader and firmware.
+I configured NuttX by doing the following:
+```bash
+$ cd $BUILD_TOP/nuttx/nuttx
+$ make menuconfig
+
+```
+Once executed, a text based menu system in the terminal will pop up showing you the config menu. 
+Navigate to the “Device Drivers” menu and make sure the parameters below are checked. Leave all other settings how they are, when finished, exit.
+
+```
+
+```
+
+These settings are crucial. They spawn the Hardware Manifest File that tells Android which signals it's calling on.
+In this case the Board being used draws mainly I2C and I2S signals from the MuC and the MHB respectively.
+
+
