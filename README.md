@@ -108,4 +108,8 @@ Navigate to the “Device Drivers” menu and make sure the parameters below are
 These settings are crucial. They spawn the Hardware Manifest File that tells Android which signals it's calling on.
 In this case the Board being used draws mainly I2C and I2S signals from the MuC and the MHB respectively.
 
+The Si4713 acts as an FM Transmitter, being a slave to the MuC's master SDA and SCL I2C signals on the board. The UDA1334 takes I2S signals from the Moto Highspeed Bridge (MHB) and pipes left and right audio through it's OUTL and OUTR pins. This is signaled to the FM Transmitter who then takes the audio and sends it out over FM bands.
+
+![si4713](https://user-images.githubusercontent.com/9141655/38448629-96c1d5b2-39d3-11e8-9318-8f572005288a.png)
+![uda1334](https://user-images.githubusercontent.com/9141655/38448631-9b011098-39d3-11e8-9ce0-36575dc5adf0.png)
 
