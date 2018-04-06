@@ -74,3 +74,19 @@ $ make
 $ sudo make install
 $ sudo ldconfig
 ```
+Configure NuttX for new build
+```bash
+$ export PATH=$PATH:$BUILD_TOP/manifesto:$BUILD_TOP/bootrom-tools
+$ cd $BUILD_TOP/nuttx/nuttx
+$ make distclean
+$ cd ./tools
+$ ./configure.sh hdk/muc/base_unpowered # use for devices with no external battery.
+```
+At this point the configs/hdk/muc/base_unpowered/defconfig will be copied to ./nuttx/nuttx/.config and the setenv.sh and Make.defs file from that same directory will be copied up to ./nuttx/nuttx.
+
+```bash
+$ cd ./nuttx/nuttx
+$ make
+```
+The firmware output is located in the <b>nuttx.bin</b>, <b>nuttx.hex</b> and <b>nuttx.tftf</b> files in the ./nuttx/nuttx
+These are to be directly loaded into the 
