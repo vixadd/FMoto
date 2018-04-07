@@ -10,6 +10,7 @@ install:
   - git clone https://github.com/MotorolaMobilityLLC/manifesto /tmp/manifesto
   - git clone https://github.com/MotorolaMobilityLLC/bootrom-tools /tmp/bootrom-tools
   - export PATH=$PATH:/tmp/manifesto:/tmp/bootrom-tools
-  
-script: - cd nuttx
-        - ./travis_build.sh
+
+script:
+  - cd ./nuttx
+  - ./travis_build.sh
