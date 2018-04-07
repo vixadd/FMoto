@@ -17,5 +17,4 @@ script:
   - cd ./tools
   - ./configure.sh hdk/muc/base_unpowered
   - cd ..
-  - make distclean
   - make
