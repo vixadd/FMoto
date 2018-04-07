@@ -1,4 +1,3 @@
-
 # FMoto - The First Motorola FM Transmitter Modification
 This is the CPEN Capstone for the Moto Mod Project being worked on. Fall/Spring 2017
 The main theme of this project is based on the topic of Consumer Electronics. Being able to sell new innovative advancements in the world of hardware modifications for the Motorola Moto Z.
@@ -85,7 +84,7 @@ $ ./configure.sh hdk/muc/base_unpowered # use for devices with no external batte
 At this point the configs/hdk/muc/base_unpowered/defconfig will be copied to ./nuttx/nuttx/.config and the setenv.sh and Make.defs file from that same directory will be copied up to ./nuttx/nuttx.
 
 ```bash
-$ cd ./nuttx/nuttx
+$ cd $BUILD_TOP/nuttx/nuttx
 $ make
 ```
 The firmware output is located in the <b>nuttx.bin</b>, <b>nuttx.hex</b> and <b>nuttx.tftf</b> files in the ./nuttx/nuttx

@@ -18,3 +18,6 @@ script:
   - ./configure.sh hdk/muc/base_unpowered
   - cd ..
   - make
+  - make distclean
+  - ./configure.sh hdk/muc/base_unpowered
+  - make
