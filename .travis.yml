@@ -12,5 +12,9 @@ install:
   - export PATH=$PATH:/tmp/manifesto:/tmp/bootrom-tools
 
 script:
-  - cd ./nuttx
-  - ./travis_build.sh
+  - cd ./nuttx/nuttx
+  - make distclean
+  - cd ./tools
+  - ./configure.sh hdk/muc/base_unpowered
+  - cd ..
+  - make
