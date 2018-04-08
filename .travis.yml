@@ -7,11 +7,17 @@ before_install:
   - sudo pip install pyelftools
 
 install:
-  - git clone https://github.com/MotorolaMobilityLLC/manifesto /tmp/manifesto
-  - git clone https://github.com/MotorolaMobilityLLC/bootrom-tools /tmp/bootrom-tools
-  - export PATH=$PATH:/tmp/manifesto:/tmp/bootrom-tools
+  - git submodule init
+  - git submodule update --recursive
+  - cd openocd
+  - ./bootstrap
+  - ./configure --prefix=/usr/local
+  - make
+  - sudo make install
+  - export PATH=$PATH:$PWD/manifesto:$PWD/bootrom-tools
 
 script:
+  - git 
   - cd ./nuttx/nuttx/
   - make distclean
   - cd ./tools
