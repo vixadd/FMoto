@@ -15,9 +15,7 @@ script:
   - cd ./nuttx/nuttx/
   - make distclean
   - cd ./tools
-  - ./configure.sh hdk/muc/base_unpowered
+  - ./configure.sh hdk/muc/fm_xmitter
   - cd ..
   - make
-  - make distclean
-  - ./configure.sh hdk/muc/base_unpowered
-  - make
+
