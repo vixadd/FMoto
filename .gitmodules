@@ -10,6 +10,3 @@
 [submodule "bootrom-tools"]
 	path = bootrom-tools
 	url = https://github.com/MotorolaMobilityLLC/bootrom-tools
-[submodule "mdkutility"]
-	path = mdkutility
-	url = https://github.com/MotorolaMobilityLLC/mdkutility
