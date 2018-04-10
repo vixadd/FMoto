@@ -11,17 +11,9 @@ install:
   - git submodule update --recursive
   - cd openocd
   - ./bootstrap
-  - ./configure --prefix=/usr/local
-  - make
-  - sudo make install
   - export PATH=$PATH:$PWD/manifesto:$PWD/bootrom-tools
 
 script:
-  - git 
   - cd ./nuttx/nuttx/
-  - make distclean
-  - cd ./tools
-  - ./configure.sh hdk/muc/fm_xmitter
-  - cd ..
   - make
 
