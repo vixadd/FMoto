@@ -19,5 +19,4 @@ script:
   - cd ./tools/
   - ./configure.sh hdk/muc/fm_xmitter
   - cd ..
-  - make
 
