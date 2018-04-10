@@ -11,6 +11,7 @@ install:
   - git submodule update --recursive
   - cd openocd
   - ./bootstrap
+  - cd ..
   - export PATH=$PATH:$PWD/manifesto:$PWD/bootrom-tools
 
 script:
