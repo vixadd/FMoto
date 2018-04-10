@@ -1,6 +1,6 @@
 # Remove these to add the Moto Mods SDK to your version control
-modlib.jar
-version.xml
+#modlib.jar
+#version.xml
 
 # Built application files
 /*/build/
