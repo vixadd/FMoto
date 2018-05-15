@@ -101,7 +101,9 @@ Once executed, a text based menu system in the terminal will pop up showing you 
 Navigate to the “Device Drivers” menu and make sure the parameters below are checked. Leave all other settings how they are, when finished, exit.
 
 ```
-
+Device Drivers  --->  
+[*] Greybus support  --->
+[*]   Mods I2S Support
 ```
 
 These settings are crucial. They spawn the Hardware Manifest File that tells Android which signals it's calling on.
